@@ -1,0 +1,56 @@
+---
+- hosts: localhost
+  roles:
+    - ovv.php7
+    - pyslackers.postgres
+    - ansible-role-wallabag
+    - pyslackers.nginx
+  vars:
+    wallabag_db_name: wallabag
+    wallabag_db_user: wallabag
+    wallabag_db_password: databasepassword
+    wallabag_secret: randomsecret
+    wallabag_url: https://wallabag.example.com
+
+    wallabag_admin: admin
+    wallabag_admin_email: admin@example.com
+    wallabag_admin_password: password
+
+    # ovv.php
+    custom_php_packages:
+      - php7.0-json
+      - php7.0-xml
+      - php7.0-pgsql
+      - php7.0-tidy
+      - php7.0-bcmath
+      - php7.0-gd
+
+    php_pools:
+      wallabag:
+        socket: /var/run/php7.0-fpm-wallabag.sock
+        user: wallabag
+        working_dir: /opt/wallabag
+
+    # pyslackers.nginx
+    ufw_enabled: False  # UFW is not installed in test images
+    nginx_sites:
+      wallabag:
+        directory: /opt/wallabag/web
+        locations:
+          - location: /
+            custom: try_files $uri /app.php$is_args$args;
+          - location: ~ ^/app\.php(/|$)
+            custom: |
+              fastcgi_pass unix:{{ php_pools['wallabag']['socket'] }};
+              fastcgi_split_path_info ^(.+\.php)(/.*)$;
+              include fastcgi_params;
+              fastcgi_param  SCRIPT_FILENAME  $realpath_root$fastcgi_script_name;
+              fastcgi_param DOCUMENT_ROOT $realpath_root;
+              internal;
+          - location: ~ \.php$
+            custom: deny all;
+
+    # pyslackers.postgres
+    postgres_users:
+      wallabag:
+        password: databasepassword

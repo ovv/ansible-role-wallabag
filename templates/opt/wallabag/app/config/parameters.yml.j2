@@ -1,0 +1,36 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_pgsql
+    database_driver_class: Wallabag\CoreBundle\Doctrine\DBAL\Driver\CustomPostgreSQLDriver
+    database_host: 127.0.0.1
+    database_port: 5432
+    database_name: {{ wallabag_db_name }}
+    database_user: {{ wallabag_db_user }}
+    database_password: {{ wallabag_db_password }}
+    database_path: null
+    database_table_prefix: wallabag_
+    database_socket: null
+    database_charset: utf8
+    domain_name: '{{ wallabag_url }}'
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: j8pJ^JfTvT4@uJ$p5hF9
+    twofactor_auth: true
+    twofactor_sender: no-reply@wallabag.org
+    fosuser_registration: true
+    fosuser_confirmation: true
+    from_email: no-reply@wallabag.org
+    rss_limit: 50
+    rabbitmq_host: localhost
+    rabbitmq_port: 5672
+    rabbitmq_user: guest
+    rabbitmq_password: guest
+    rabbitmq_prefetch_count: 10
+    redis_scheme: tcp
+    redis_host: localhost
+    redis_port: 6379
+    redis_path: null
+    redis_password: null
