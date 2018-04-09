@@ -35,7 +35,7 @@
 
 - name: install
   shell: yes no | /opt/wallabag/bin/console wallabag:install -e prod
-  when: wallabag_download | changed
+  when: wallabag_download is changed
 
 - name: check users
   command: bin/console wallabag:user:list
@@ -55,21 +55,21 @@
   command: "bin/console fos:user:deactivate wallabag"
   args:
     chdir: /opt/wallabag
-  when: wallabag_users.stdout | match("wallabag ( *)no")
+  when: wallabag_users.stdout is match("wallabag ( *)no")
 
 - name: demote wallabag user
   command: "bin/console fos:user:demote wallabag --super"
   args:
     chdir: /opt/wallabag
-  when: wallabag_users.stdout | match("wallabag ( *)(no|yes)( *)no")
+  when: wallabag_users.stdout is match("wallabag ( *)(no|yes)( *)no")
 
 - name: change wallabag user password
   no_log: True
   command: "bin/console fos:user:change-password wallabag lookup('password')"
   args:
     chdir: /opt/wallabag
-  when: wallabag_install | changed
+  when: wallabag_install is changed
 
 - name: permissions
   command: chown -R wallabag:wallabag /opt/wallabag/web /opt/wallabag/var /opt/wallabag/bin /opt/wallabag/app/config /opt/wallabag/vendor
-  when: wallabag_download | changed
+  when: wallabag_download is changed
