@@ -2,11 +2,10 @@
 
 - name: install apt requirements
   apt:
-    pkg: "{{ item }}"
+    pkg:
+      - git
+      - unzip
     state: latest
-  with_items:
-    - git
-    - unzip
 
 - name: Download
   git:
