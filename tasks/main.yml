@@ -5,7 +5,8 @@
     pkg:
       - git
       - unzip
-    state: latest
+      - bash
+    state: present
 
 - name: Download
   git:
@@ -33,7 +34,12 @@
   register: wallabag_install
 
 - name: install
-  shell: yes no | /opt/wallabag/bin/console wallabag:install -e prod
+  shell: |
+    set -o pipefail
+    yes no | /opt/wallabag/bin/console wallabag:install -e prod
+    exit 0
+  args:
+    executable: /bin/bash
   when: wallabag_download is changed
 
 - name: check users
@@ -69,6 +75,12 @@
     chdir: /opt/wallabag
   when: wallabag_install is changed
 
-- name: permissions
-  command: chown -R wallabag:wallabag /opt/wallabag/web /opt/wallabag/var /opt/wallabag/bin /opt/wallabag/app/config /opt/wallabag/vendor
+- name: permissions  # noqa 302
+  command: >
+    chown -R wallabag:wallabag
+    /opt/wallabag/web
+    /opt/wallabag/var
+    /opt/wallabag/bin
+    /opt/wallabag/app/config
+    /opt/wallabag/vendor
   when: wallabag_download is changed
