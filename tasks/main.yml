@@ -83,4 +83,5 @@
     /opt/wallabag/bin
     /opt/wallabag/app/config
     /opt/wallabag/vendor
+    /opt/wallabag/data
   when: wallabag_download is changed
